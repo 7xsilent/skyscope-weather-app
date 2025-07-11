@@ -1,0 +1,724 @@
+/* src/styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Universal Box Sizing - IMPORTANT for consistent layout */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%; /* Ensure html takes full available width */
+  overflow-x: hidden; /* Hide horizontal scrollbar on html */
+}
+
+body {
+  background-color: #1a232f; /* Directly set to the dark mode background color */
+  margin: 0;
+  padding: 0;
+  width: 100vw; /* Ensure body takes full viewport width, including potential scrollbar space */
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: hidden; /* Hide horizontal scrollbar on body */
+  color: var(--text); /* Default text color for dark mode */
+}
+
+:root {
+  /* Color Palette - Now exclusively for dark mode */
+  --bg: #1a232f; /* A deep, rich dark blue for night sky */
+
+  /* Card and Glassmorphism Colors */
+  --card-bg: rgba(25, 35, 50, 0.75); /* Darker, more transparent */
+  
+  /* Text Colors */
+  --text: #e2e8f0; /* Softer, off-white for dark mode */
+
+  /* Shadows */
+  --shadow: 0 18px 60px 0 rgba(0, 0, 0, 0.7); /* Stronger, more diffused shadow */
+
+  /* Borders for Glassmorphism */
+  --border: rgba(255, 255, 255, 0.15);
+
+  /* Button Colors */
+  --primary-button: #60a5fa; /* Tailwind blue-400 */
+  --secondary-button: #34d399; /* Tailwind emerald-400 */
+  --export-button: #fb923c; /* Tailwind orange-400 */
+
+  /* Status Colors */
+  --error-color: #ef4444; /* Tailwind red-500 */
+  --success-color: #22c55e; /* Tailwind green-500 */
+  --info-color: #0ea5e9; /* Tailwind sky-500 */
+
+  /* Sky-themed colors for input and initial elements */
+  --input-bg: rgba(40, 50, 65, 0.4); /* Darker, more transparent */
+  --input-border: rgba(255, 255, 255, 0.2);
+  --input-placeholder: rgba(224, 231, 255, 0.5); /* Lighter placeholder */
+
+  /* Variable for the initial "current weather panel" background before data is loaded */
+  --initial-panel-bg: rgba(30, 41, 59, 0.25); /* Very dark, transparent */
+}
+
+.app-container {
+  position: relative;
+  min-height: 100vh;
+  padding: 3rem 2rem; /* Adjusted horizontal padding for better containment */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  max-width: 1400px; /* Set a max-width for the main content area */
+  margin: 0 auto; /* Center the container horizontally */
+  overflow: hidden; /* Crucial for containing potential internal overflows */
+  opacity: 0; /* Start hidden for fade-in animation */
+  transform: translateY(20px); /* Start slightly below for slide-up */
+  animation: fadeInUp 1s ease-out forwards; /* Apply fade-in animation */
+}
+
+/* Keyframe for global app fade-in */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  background-size: 400% 400%;
+  animation: gradientBG 30s ease infinite;
+  background: linear-gradient(135deg, #1a232f, #2c3e50, #334155, #475569);
+  transition: background 1.2s ease-in-out;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Cloud Animation Styles - Refined */
+.clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; /* Ensure clouds container is 100% width */
+  height: 100%;
+  overflow: hidden; /* Crucial for containing clouds */
+  z-index: -1;
+  pointer-events: none;
+}
+
+.cloud {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  position: absolute;
+  opacity: 0.6;
+  filter: blur(10px);
+  animation: animateCloud 40s linear infinite,
+             cloudBob 6s ease-in-out infinite alternate,
+             cloudFade 8s infinite alternate;
+  will-change: transform, opacity; /* Hint to browser for animation optimization */
+}
+
+.cloud::after, .cloud::before {
+  content: '';
+  background: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* Individual cloud sizes and positions - Further enlarged and varied */
+/* Removed 'left' properties, horizontal positioning now fully by animateCloud transform */
+.cloud.x1 {
+  width: 160px; height: 160px;
+  top: 8%;
+  animation-delay: 0s;
+  animation-duration: 45s;
+}
+.cloud.x1::after { width: 160px; height: 160px; top: -70px; left: 80px; }
+.cloud.x1::before { width: 190px; height: 190px; top: -100px; left: -50px; }
+
+.cloud.x2 {
+  width: 200px; height: 200px;
+  top: 25%;
+  animation-delay: 6s;
+  animation-duration: 55s;
+}
+.cloud.x2::after { width: 200px; height: 200px; top: -90px; left: 100px; }
+.cloud.x2::before { width: 230px; height: 230px; top: -120px; left: -60px; }
+
+.cloud.x3 {
+  width: 140px; height: 140px;
+  top: 45%;
+  animation-delay: 12s;
+  animation-duration: 50s;
+}
+.cloud.x3::after { width: 140px; height: 140px; top: -60px; left: 70px; }
+.cloud.x3::before { width: 170px; height: 170px; top: -90px; left: -40px; }
+
+.cloud.x4 {
+  width: 180px; height: 180px;
+  top: 65%;
+  animation-delay: 18s;
+  animation-duration: 60s;
+}
+.cloud.x4::after { width: 180px; height: 180px; top: -80px; left: 90px; }
+.cloud.x4::before { width: 210px; height: 210px; top: -110px; left: -55px; }
+
+.cloud.x5 {
+  width: 150px; height: 150px;
+  top: 15%;
+  animation-delay: 24s;
+  animation-duration: 48s;
+}
+.cloud.x5::after { width: 150px; height: 150px; top: -65px; left: 75px; }
+.cloud.x5::before { width: 180px; height: 180px; top: -95px; left: -45px; }
+
+/* Adjusted animateCloud to use translateX with extremely generous off-screen values */
+@keyframes animateCloud {
+  0% { transform: translateX(-200%); } /* Start at 200% of its own width off-screen left */
+  100% { transform: translateX(200vw); } /* End at 200% of viewport width off-screen right */
+}
+
+@keyframes cloudBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+/* New: Cloud Opacity Fade */
+@keyframes cloudFade {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.8; }
+}
+
+
+/* Header and Toggle Button */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  width: 100%;
+  padding-bottom: 1.8rem;
+  position: relative;
+  z-index: 2;
+}
+
+.app-header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+  letter-spacing: 1.5px;
+}
+
+.theme-toggle {
+  display: none; /* Hide the theme toggle button */
+}
+
+/* Search Panel */
+.search-panel {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+.search-panel input {
+  padding: 1rem 2rem;
+  border: 1px solid var(--input-border);
+  border-radius: 50px;
+  font-size: 1.2rem;
+  width: clamp(300px, 50vw, 500px);
+  background: var(--input-bg);
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.3);
+  outline: none;
+  transition: background 0.3s, box-shadow 0.3s, border-color 0.3s;
+  color: var(--text);
+}
+.search-panel input::placeholder {
+  color: var(--input-placeholder);
+}
+.search-panel input:focus {
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.4), 0 0 0 4px var(--primary-button);
+  border-color: var(--primary-button);
+}
+
+
+.search-panel button {
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  border: none;
+  background-color: var(--primary-button);
+  color: white;
+  font-weight: 600;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.search-panel button:nth-of-type(2) { /* "Use My Location" button */
+  background-color: var(--secondary-button);
+}
+
+/* Export button specific style */
+.search-panel .export-button {
+  background-color: var(--export-button);
+}
+
+
+.search-panel button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.search-panel button:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+.loader, .error-message {
+  text-align: center;
+  font-size: 1.4rem;
+  margin-top: 3rem;
+  padding: 1.5rem 3rem;
+  border-radius: 20px;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: inline-block;
+  box-shadow: var(--shadow);
+  position: relative;
+  z-index: 2;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* New: Loader Animation */
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin-top: -15px;
+  margin-left: -15px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--primary-button);
+  border-bottom-color: var(--primary-button);
+  animation: spin 1s linear infinite;
+}
+
+.loader {
+  padding-left: 60px; /* Make space for the spinner */
+  padding-right: 30px;
+  display: flex; /* Use flexbox to center text with spinner */
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* New: Error Message Shake Animation */
+.error-message {
+  color: var(--error-color);
+  font-weight: 600;
+  animation: shakeError 0.5s ease-in-out;
+}
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+
+/* MAIN DASHBOARD STYLES */
+.weather-dashboard {
+  display: grid;
+  grid-template-columns: 1fr; /* Start with single column for mobile-first */
+  gap: 3rem;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Initial state of the current-weather-panel before data is loaded */
+.current-weather-panel.initial {
+  background: var(--initial-panel-bg);
+  border: 1px dashed var(--input-border);
+  box-shadow: none;
+  color: var(--input-placeholder);
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 350px;
+  font-size: 2rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.5s ease;
+}
+
+/* Hide specific elements in the initial panel */
+.current-weather-panel.initial .weather-icon-large,
+.current-weather-panel.initial .current-temp,
+.current-weather-panel.initial .weather-description {
+  display: none;
+}
+
+/* Style for the placeholder text in the initial panel */
+.current-weather-panel.initial h2 {
+  margin-top: 0;
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: inherit;
+  text-shadow: inherit;
+}
+
+@media (min-width: 900px) {
+  .weather-dashboard {
+    grid-template-columns: 400px 1fr; /* Apply two-column layout on larger screens */
+    align-items: flex-start;
+  }
+}
+
+.current-weather-panel, .ai-suggestion-panel, .weather-details-grid, .weather-forecast-panel {
+  background: var(--card-bg);
+  border-radius: 35px;
+  padding: 3.5rem;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: all 0.4s ease, border-color 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover effect for all main panels */
+.current-weather-panel:hover, .ai-suggestion-panel:hover, .weather-details-grid:hover, .weather-forecast-panel:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow);
+  border-color: var(--primary-button);
+}
+
+
+.current-weather-panel {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+/* Ensure these specific styles only apply when weather data is loaded */
+.current-weather-panel:not(.initial) h2 {
+  margin-top: 0;
+  font-size: 2.8rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.15);
+}
+
+.weather-icon-large {
+    width: 220px;
+    height: 220px;
+    margin: -1.5rem 0;
+    filter: drop-shadow(0 12px 25px rgba(0,0,0,0.3));
+    transition: transform 0.3s ease;
+    animation: pulseIcon 2s infinite alternate;
+}
+/* Keyframe for icon pulse */
+@keyframes pulseIcon {
+  0% { transform: scale(1); filter: drop-shadow(0 12px 25px rgba(0,0,0,0.3)); }
+  100% { transform: scale(1.05); filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5)); }
+}
+
+.current-weather-panel:hover .weather-icon-large {
+  transform: scale(1.07);
+}
+
+.current-temp {
+  font-size: 6.5rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+  animation: shimmerText 3s infinite alternate;
+}
+/* Keyframe for text shimmer */
+@keyframes shimmerText {
+  0%, 100% { text-shadow: 3px 3px 6px rgba(0,0,0,0.2); }
+  50% { text-shadow: 3px 3px 10px rgba(255,255,255,0.3), 0 0 15px rgba(255,255,255,0.1); }
+}
+
+
+.weather-description {
+  font-size: 1.6rem;
+  text-transform: capitalize;
+  font-weight: 500;
+  margin-top: 0.85rem;
+  opacity: 0.95;
+}
+
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.ai-suggestion-panel h3, .weather-details-grid h3, .weather-forecast-panel h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+    color: var(--text);
+    font-size: 1.8rem;
+    font-weight: 600;
+    position: relative;
+}
+/* Subtle underline animation for headings */
+.ai-suggestion-panel h3::after, .weather-details-grid h3::after, .weather-forecast-panel h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0;
+  height: 3px;
+  background-color: var(--primary-button);
+  transition: width 0.4s ease-out;
+}
+.ai-suggestion-panel:hover h3::after, .weather-details-grid:hover h3::after, .weather-forecast-panel:hover h3::after {
+  width: 100%;
+}
+
+
+.ai-suggestion-panel p, .weather-forecast-panel p {
+    margin-bottom: 0;
+    font-size: 1.15rem;
+    line-height: 1.9;
+    opacity: 0.95;
+}
+
+.weather-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2.5rem;
+}
+
+.detail-item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.detail-item:hover {
+  transform: translateY(-4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+
+.detail-label {
+    font-size: 1.05rem;
+    font-weight: 400;
+    opacity: 0.9;
+    margin-bottom: 0.3rem;
+}
+
+.detail-value {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-top: 0.35rem;
+    line-height: 1.2;
+    text-shadow: 1px 1px 3px rgba(255,255,255,0.1);
+}
+
+/* Weather Forecast Panel Styles */
+.weather-forecast-panel {
+  grid-column: 1 / -1;
+}
+
+.weather-forecast-panel.initial {
+  background: var(--initial-panel-bg);
+  border: 1px dashed var(--input-border);
+  box-shadow: none;
+  color: var(--input-placeholder);
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.weather-forecast-panel.initial p {
+  margin-top: 1rem;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.forecast-day-item {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 15px;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.3s ease, transform 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.forecast-day-item:hover {
+  transform: translateY(-5px);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.forecast-date {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.forecast-icon {
+  width: 60px;
+  height: 60px;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
+}
+
+.forecast-temps {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  line-height: 1.2;
+}
+.max-temp {
+  color: #ff8a80;
+}
+.min-temp {
+  color: #81d4fa;
+}
+
+.forecast-description {
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  opacity: 0.8;
+  margin-top: 0.2rem;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  html {
+    width: 100%; /* Changed from 100vw to 100% for mobile */
+  }
+  body {
+    width: 100vw; /* Keep 100vw on body for mobile */
+  }
+  .app-container {
+    padding: 1.8rem;
+  }
+  .app-header h1 {
+    font-size: 2.5rem;
+  }
+  .theme-toggle {
+    width: 45px;
+    height: 45px;
+    font-size: 1.5rem;
+  }
+  .search-panel {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .search-panel input, .search-panel button {
+    width: 95%; /* Use percentage for better mobile responsiveness */
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+  }
+  .current-temp {
+    font-size: 5rem;
+  }
+  .weather-icon-large {
+    width: 180px;
+    height: 180px;
+  }
+  .weather-description {
+    font-size: 1.3rem;
+  }
+  .weather-dashboard {
+    gap: 2rem;
+  }
+  .current-weather-panel, .ai-suggestion-panel, .weather-details-grid, .weather-forecast-panel {
+    padding: 2.5rem;
+    border-radius: 25px;
+  }
+  .ai-suggestion-panel h3, .weather-details-grid h3, .weather-forecast-panel h3 {
+    font-size: 1.5rem;
+  }
+  .ai-suggestion-panel p, .weather-forecast-panel p {
+    font-size: 1.05rem;
+  }
+  .weather-details-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1.5rem;
+  }
+  .detail-label {
+    font-size: 0.95rem;
+  }
+  .detail-value {
+    font-size: 1.6rem;
+  }
+  .forecast-grid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 1rem;
+  }
+  .forecast-icon {
+    width: 50px;
+    height: 50px;
+  }
+  .forecast-temps {
+    font-size: 1rem;
+  }
+  .forecast-description {
+    font-size: 0.75rem;
+  }
+}

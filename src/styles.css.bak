@@ -1,0 +1,769 @@
+/* src/styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* IMPORTANT FIX: Set a default background color for HTML/Body to prevent white flash */
+/* This rule should be at the very top of your CSS file */
+html, body {
+  background-color: #ADD8E6; /* A soft light blue, matching the new light-mode gradient start */
+  margin: 0;
+  padding: 0; /* Ensure no default padding */
+  width: 100%;
+  min-height: 100vh; /* Ensure html and body always take full viewport height */
+  font-family: 'Poppins', sans-serif;
+  transition: background-color 0.4s ease, color 0.4s ease; /* Smoother transitions */
+  overflow-x: hidden; /* Prevent horizontal scroll due to clouds */
+}
+
+:root {
+  /* Enhanced Color Palette */
+  --bg-light: #F0F8FF; /* AliceBlue - very light, almost white for a fresh feel */
+  --bg-dark: #0f172a; /* A very deep, dark blue-gray for a true night sky */
+
+  /* Card and Glassmorphism Colors - Slightly more transparent and refined for light mode */
+  --card-bg-light: rgba(255, 255, 255, 0.85); /* Slightly more opaque for better readability */
+  --card-bg-dark: rgba(25, 35, 50, 0.75); /* Darker, more transparent */
+  
+  /* Text Colors - Improved contrast for light mode */
+  --text-light: #36454F; /* Charcoal - a soft, dark gray for better readability */
+  --text-dark: #e2e8f0; /* Softer, off-white for dark mode */
+
+  /* Shadows - More pronounced and ethereal */
+  --shadow-light: 0 18px 60px 0 rgba(0, 100, 200, 0.25); /* Blue-tinted shadow for light mode */
+  --shadow-dark: 0 18px 60px 0 rgba(0, 0, 0, 0.7); /* Stronger, more diffused shadow */
+
+  /* Borders for Glassmorphism - More subtle */
+  --border-light: rgba(173, 216, 230, 0.6); /* Light blue border, blending with sky */
+  --border-dark: rgba(255, 255, 255, 0.15);
+
+  /* Button Colors - More vibrant and distinct */
+  --primary-button-light: #4682B4; /* SteelBlue - a strong, appealing blue */
+  --primary-button-dark: #60a5fa; /* Tailwind blue-400 */
+  --secondary-button-light: #66CDAA; /* MediumAquaMarine - a fresh, inviting green */
+  --secondary-button-dark: #34d399; /* Tailwind emerald-400 */
+  --export-button-light: #FFA07A; /* LightSalmon - a soft, warm orange */
+  --export-button-dark: #fb923c; /* Tailwind orange-400 */
+
+  /* Status Colors */
+  --error-color: #DC143C; /* Crimson - a clear, strong red */
+  --success-color: #3CB371; /* MediumSeaGreen - a vibrant green */
+  --info-color: #4682B4; /* SteelBlue - consistent info color */
+
+  /* Sky-themed colors for input and initial elements - Adjusted for new light mode */
+  --input-bg-light: rgba(240, 248, 255, 0.6); /* AliceBlue with transparency */
+  --input-border-light: rgba(173, 216, 230, 0.8); /* Light blue border */
+  --input-placeholder-light: rgba(54, 69, 79, 0.7); /* Darker gray placeholder */
+
+  --input-bg-dark: rgba(40, 50, 65, 0.4); /* Darker, more transparent for dark mode */
+  --input-border-dark: rgba(255, 255, 255, 0.2);
+  --input-placeholder-dark: rgba(224, 231, 255, 0.5); /* Lighter placeholder */
+
+  /* New variable for the initial "current weather panel" background before data is loaded */
+  --initial-panel-bg-light: rgba(240, 248, 255, 0.4); /* AliceBlue with transparency */
+  --initial-panel-bg-dark: rgba(30, 41, 59, 0.25); /* Very dark, transparent */
+}
+
+body.light-mode {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+}
+
+body.dark-mode {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.app-container {
+  position: relative;
+  min-height: 100vh;
+  padding: 3rem; /* Increased padding for more spacious feel */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Ensure clouds don't overflow */
+}
+
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2; /* Below clouds and content */
+  background-size: 400% 400%;
+  animation: gradientBG 30s ease infinite; /* Even slower, more subtle animation */
+  transition: background 1.2s ease-in-out; /* Smoother transition for background gradient change */
+}
+
+/* Specific gradient for light mode for a brighter sky */
+body.light-mode .animated-background {
+  background: linear-gradient(135deg, #ADD8E6, #B0E0E6, #87CEEB, #6A5ACD); /* Lighter, softer blues and a hint of lavender */
+}
+
+/* Specific gradient for dark mode for a night sky feel */
+body.dark-mode .animated-background {
+  background: linear-gradient(135deg, #0f172a, #1e293b, #334155, #475569); /* Deeper, more atmospheric night blues */
+}
+
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Cloud Animation Styles - Refined */
+.clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1; /* Above background, below content */
+  pointer-events: none; /* Ensure clouds don't interfere with clicks */
+}
+
+.cloud {
+  background: rgba(255, 255, 255, 0.9); /* Slightly more opaque white for clouds */
+  border-radius: 50%;
+  position: absolute;
+  opacity: 0.6; /* Slightly more transparent for a softer look */
+  filter: blur(10px); /* Even stronger blur for very soft edges */
+  animation: animateCloud 40s linear infinite, cloudBob 6s ease-in-out infinite alternate; /* Slower and bobbing */
+}
+
+.cloud::after, .cloud::before {
+  content: '';
+  background: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* Individual cloud sizes and positions - Further enlarged and varied */
+.cloud.x1 {
+  width: 160px; height: 160px;
+  top: 8%; left: -20%;
+  animation-delay: 0s;
+  animation-duration: 45s;
+}
+.cloud.x1::after { width: 160px; height: 160px; top: -70px; left: 80px; }
+.cloud.x1::before { width: 190px; height: 190px; top: -100px; left: -50px; }
+
+.cloud.x2 {
+  width: 200px; height: 200px;
+  top: 25%; left: -25%;
+  animation-delay: 6s;
+  animation-duration: 55s;
+}
+.cloud.x2::after { width: 200px; height: 200px; top: -90px; left: 100px; }
+.cloud.x2::before { width: 230px; height: 230px; top: -120px; left: -60px; }
+
+.cloud.x3 {
+  width: 140px; height: 140px;
+  top: 45%; left: -15%;
+  animation-delay: 12s;
+  animation-duration: 50s;
+}
+.cloud.x3::after { width: 140px; height: 140px; top: -60px; left: 70px; }
+.cloud.x3::before { width: 170px; height: 170px; top: -90px; left: -40px; }
+
+.cloud.x4 {
+  width: 180px; height: 180px;
+  top: 65%; left: -22%;
+  animation-delay: 18s;
+  animation-duration: 60s;
+}
+.cloud.x4::after { width: 180px; height: 180px; top: -80px; left: 90px; }
+.cloud.x4::before { width: 210px; height: 210px; top: -110px; left: -55px; }
+
+.cloud.x5 {
+  width: 150px; height: 150px;
+  top: 15%; left: -18%;
+  animation-delay: 24s;
+  animation-duration: 48s;
+}
+.cloud.x5::after { width: 150px; height: 150px; top: -65px; left: 75px; }
+.cloud.x5::before { width: 180px; height: 180px; top: -95px; left: -45px; }
+
+@keyframes animateCloud {
+  0% { left: -30%; } /* Start further left */
+  100% { left: 110%; } /* End further right */
+}
+
+@keyframes cloudBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); } /* Slightly more pronounced vertical movement */
+}
+
+/* Header and Toggle Button */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  width: 100%;
+  padding-bottom: 1.8rem; /* More padding */
+  position: relative;
+  z-index: 2; /* Higher z-index for header */
+}
+
+.app-header h1 {
+  font-size: 3rem; /* Larger title */
+  font-weight: 700;
+  color: white;
+  text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); /* Stronger, more diffused shadow */
+  letter-spacing: 1.5px; /* Slight letter spacing */
+}
+
+.theme-toggle {
+  background: var(--card-bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  width: 55px; /* Larger button */
+  height: 55px;
+  font-size: 2rem; /* Larger icon */
+  cursor: pointer;
+  backdrop-filter: blur(15px); /* Stronger blur */
+  -webkit-backdrop-filter: blur(15px);
+  transition: all 0.4s ease; /* Smoother transition */
+  box-shadow: var(--shadow-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dark-mode .theme-toggle {
+  background: var(--card-bg-dark);
+  border-color: var(--border-dark);
+  box-shadow: var(--shadow-dark);
+}
+.theme-toggle:hover {
+  transform: scale(1.2) rotate(25deg); /* More pronounced hover */
+  box-shadow: var(--shadow-light); /* Keep shadow consistent or slightly larger */
+}
+
+/* Search Panel */
+.search-panel {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem; /* Slightly larger gap */
+  margin-bottom: 3rem; /* More margin */
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2; /* Higher z-index */
+}
+
+.search-panel input {
+  padding: 1rem 2rem; /* More padding */
+  border: 1px solid var(--input-border-light); /* Use new border variable */
+  border-radius: 50px;
+  font-size: 1.2rem; /* Larger font */
+  width: clamp(300px, 50vw, 500px); /* Adjusted clamp values */
+  background: var(--input-bg-light); /* Use new background variable */
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.1); /* Stronger inset shadow */
+  outline: none;
+  transition: background 0.3s, box-shadow 0.3s, border-color 0.3s; /* Add border-color transition */
+  color: var(--text-light);
+}
+.dark-mode .search-panel input {
+  background: var(--input-bg-dark); /* Use new dark mode background variable */
+  border-color: var(--input-border-dark); /* Use new dark mode border variable */
+  color: var(--text-dark);
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.3); /* Stronger inset shadow for dark mode */
+}
+.search-panel input::placeholder {
+  color: var(--input-placeholder-light); /* Use new placeholder variable */
+}
+.dark-mode .search-panel input::placeholder {
+  color: var(--input-placeholder-dark); /* Use new dark mode placeholder variable */
+}
+.search-panel input:focus {
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.2), 0 0 0 4px var(--primary-button-light); /* Focus ring */
+  border-color: var(--primary-button-light); /* Highlight border on focus */
+}
+.dark-mode .search-panel input:focus {
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.4), 0 0 0 4px var(--primary-button-dark);
+  border-color: var(--primary-button-dark);
+}
+
+
+.search-panel button {
+  padding: 1rem 2rem; /* More padding */
+  border-radius: 50px;
+  border: none;
+  background-color: var(--primary-button-light);
+  color: white;
+  font-weight: 600;
+  font-size: 1.2rem; /* Larger font */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+  text-transform: uppercase; /* Uppercase text */
+  letter-spacing: 0.8px; /* Slightly more letter spacing */
+}
+.dark-mode .search-panel button {
+  background-color: var(--primary-button-dark);
+}
+
+.search-panel button:nth-of-type(2) { /* "Use My Location" button */
+  background-color: var(--secondary-button-light);
+}
+.dark-mode .search-panel button:nth-of-type(2) {
+  background-color: var(--secondary-button-dark);
+}
+
+/* Export button specific style */
+.search-panel .export-button {
+  background-color: var(--export-button-light); /* Orange color */
+}
+.dark-mode .search-panel .export-button {
+  background-color: var(--export-button-dark);
+}
+
+
+.search-panel button:hover {
+  filter: brightness(1.1); /* More noticeable brightness change */
+  transform: translateY(-5px) scale(1.03); /* More pronounced lift and slight scale */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Even stronger shadow on hover */
+}
+
+.search-panel button:active {
+  transform: translateY(-2px); /* More pronounced press effect */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+.loader, .error-message {
+  text-align: center;
+  font-size: 1.4rem; /* Larger font */
+  margin-top: 3rem; /* More margin */
+  padding: 1.5rem 3rem; /* More padding */
+  border-radius: 20px; /* More rounded */
+  background: var(--card-bg-light);
+  backdrop-filter: blur(20px); /* Stronger blur */
+  -webkit-backdrop-filter: blur(20px);
+  display: inline-block;
+  box-shadow: var(--shadow-light);
+  position: relative;
+  z-index: 2;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.dark-mode .loader, .dark-mode .error-message {
+  background: var(--card-bg-dark);
+  box-shadow: var(--shadow-dark);
+  color: var(--text-dark);
+}
+
+.error-message {
+  color: var(--error-color); /* Use variable */
+  font-weight: 600;
+}
+.dark-mode .error-message {
+  color: #ff6b6b; /* Brighter red for dark mode errors */
+}
+
+
+/* MAIN DASHBOARD STYLES */
+.weather-dashboard {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem; /* Larger gap */
+  margin-top: 2rem; /* More margin */
+  position: relative;
+  z-index: 2;
+}
+
+/* Initial state of the current-weather-panel before data is loaded */
+.current-weather-panel.initial {
+  background: var(--initial-panel-bg-light); /* Use softer, sky-colored background */
+  border: 1px dashed var(--input-border-light); /* Dashed border for placeholder feel */
+  box-shadow: none; /* No shadow initially */
+  color: var(--input-placeholder-light); /* Lighter text color for placeholder */
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.1); /* Softer text shadow */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 350px; /* Ensure it has a height */
+  font-size: 2rem; /* Larger font */
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.5s ease; /* Smooth transition when it changes */
+}
+
+.dark-mode .current-weather-panel.initial {
+  background: var(--initial-panel-bg-dark);
+  border: 1px dashed var(--input-border-dark);
+  color: var(--input-placeholder-dark);
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+}
+
+/* Hide specific elements in the initial panel */
+.current-weather-panel.initial .weather-icon-large,
+.current-weather-panel.initial .current-temp,
+.current-weather-panel.initial .weather-description {
+  display: none;
+}
+
+/* Style for the placeholder text in the initial panel */
+.current-weather-panel.initial h2 {
+  margin-top: 0;
+  font-size: 2.8rem; /* Larger heading */
+  font-weight: 600;
+  color: inherit; /* Inherit color from parent */
+  text-shadow: inherit; /* Inherit shadow from parent */
+}
+
+@media (min-width: 900px) {
+  .weather-dashboard {
+    grid-template-columns: 400px 1fr; /* Slightly wider left panel */
+    align-items: flex-start;
+  }
+}
+
+.current-weather-panel, .ai-suggestion-panel, .weather-details-grid, .weather-forecast-panel { /* Added .weather-forecast-panel */
+  background: var(--card-bg-light);
+  border-radius: 35px; /* Even more rounded corners */
+  padding: 3.5rem; /* More padding */
+  backdrop-filter: blur(30px); /* Even stronger blur */
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-light);
+  transition: all 0.4s ease; /* Smoother transition */
+  position: relative;
+  overflow: hidden; /* For potential internal effects */
+}
+.dark-mode .current-weather-panel, .dark-mode .ai-suggestion-panel, .dark-mode .weather-details-grid, .dark-mode .weather-forecast-panel { /* Added .weather-forecast-panel */
+  background: var(--card-bg-dark);
+  border-color: var(--border-dark);
+  box-shadow: var(--shadow-dark);
+}
+
+/* Hover effect for all main panels */
+.current-weather-panel:hover, .ai-suggestion-panel:hover, .weather-details-grid:hover, .weather-forecast-panel:hover { /* Added .weather-forecast-panel */
+  transform: translateY(-8px); /* More pronounced lift on hover */
+  box-shadow: var(--shadow-light); /* Maintain or slightly enhance shadow */
+}
+.dark-mode .current-weather-panel:hover, .dark-mode .ai-suggestion-panel:hover, .dark-mode .weather-details-grid:hover, .dark-mode .weather-forecast-panel:hover { /* Added .weather-forecast-panel */
+  box-shadow: var(--shadow-dark);
+}
+
+
+.current-weather-panel {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+/* Ensure these specific styles only apply when weather data is loaded */
+.current-weather-panel:not(.initial) h2 {
+  margin-top: 0;
+  font-size: 2.8rem; /* Larger city name */
+  font-weight: 600;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.15); /* Subtle text shadow */
+}
+.dark-mode .current-weather-panel:not(.initial) h2 {
+  text-shadow: 1px 1px 4px rgba(255,255,255,0.15);
+}
+
+.weather-icon-large {
+    width: 220px; /* Even larger icon */
+    height: 220px;
+    margin: -1.5rem 0;
+    filter: drop-shadow(0 12px 25px rgba(0,0,0,0.3)); /* Stronger shadow */
+    transition: transform 0.3s ease; /* For potential future animations */
+}
+.current-weather-panel:hover .weather-icon-large {
+  transform: scale(1.07); /* Slightly more pronounced scale on panel hover */
+}
+
+.current-temp {
+  font-size: 6.5rem; /* Even larger temperature */
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.2); /* More pronounced text shadow */
+}
+.dark-mode .current-temp {
+  text-shadow: 3px 3px 6px rgba(255,255,255,0.2);
+}
+
+.weather-description {
+  font-size: 1.6rem; /* Larger description */
+  text-transform: capitalize;
+  font-weight: 500;
+  margin-top: 0.85rem; /* More margin */
+  opacity: 0.95; /* Slightly less opaque */
+}
+
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem; /* Larger gap between right panels */
+}
+
+.ai-suggestion-panel h3, .weather-details-grid h3, .weather-forecast-panel h3 { /* Added .weather-forecast-panel */
+    margin-top: 0;
+    margin-bottom: 1.5rem; /* More margin */
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 1rem; /* More padding */
+    color: var(--text-light);
+    font-size: 1.8rem; /* Larger heading */
+    font-weight: 600;
+    position: relative;
+}
+.dark-mode .ai-suggestion-panel h3, .dark-mode .weather-details-grid h3, .dark-mode .weather-forecast-panel h3 { /* Added .weather-forecast-panel */
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+/* Subtle underline animation for headings */
+.ai-suggestion-panel h3::after, .weather-details-grid h3::after, .weather-forecast-panel h3::after { /* Added .weather-forecast-panel */
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px; /* Position below the border */
+  width: 0;
+  height: 3px; /* Thicker underline */
+  background-color: var(--primary-button-light); /* Accent color */
+  transition: width 0.4s ease-out; /* Slower transition */
+}
+.dark-mode .ai-suggestion-panel h3::after, .dark-mode .weather-details-grid h3::after, .dark-mode .weather-forecast-panel h3::after { /* Added .weather-forecast-panel */
+  background-color: var(--primary-button-dark);
+}
+.ai-suggestion-panel:hover h3::after, .weather-details-grid:hover h3::after, .weather-forecast-panel:hover h3::after { /* Added .weather-forecast-panel */
+  width: 100%; /* Expand underline on hover */
+}
+
+
+.ai-suggestion-panel p, .weather-forecast-panel p { /* Added .weather-forecast-panel */
+    margin-bottom: 0;
+    font-size: 1.15rem; /* Slightly larger text */
+    line-height: 1.9; /* More line height for readability */
+    opacity: 0.95;
+}
+
+.weather-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust min width */
+    gap: 2.5rem; /* Larger gap */
+}
+
+.detail-item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem; /* More padding for better spacing */
+  background: rgba(255, 255, 255, 0.25); /* Subtle background for each item */
+  border-radius: 20px; /* More rounded corners for items */
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.dark-mode .detail-item {
+  background: rgba(0, 0, 0, 0.25);
+}
+.detail-item:hover {
+  transform: translateY(-4px); /* More pronounced lift on hover */
+  background: rgba(255, 255, 255, 0.5); /* Brighter background on hover */
+}
+.dark-mode .detail-item:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+
+.detail-label {
+    font-size: 1.05rem; /* Larger label */
+    font-weight: 400;
+    opacity: 0.9;
+    margin-bottom: 0.3rem;
+}
+
+.detail-value {
+    font-size: 2rem; /* Larger value */
+    font-weight: 600;
+    margin-top: 0.35rem;
+    line-height: 1.2;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1); /* Subtle text shadow */
+}
+.dark-mode .detail-value {
+  text-shadow: 1px 1px 3px rgba(255,255,255,0.1);
+}
+
+/* Weather Forecast Panel Styles */
+.weather-forecast-panel {
+  grid-column: 1 / -1; /* Make it span full width below other panels */
+  /* Inherits general panel styles from .current-weather-panel, .ai-suggestion-panel, .weather-details-grid */
+}
+
+.weather-forecast-panel.initial {
+  background: var(--initial-panel-bg-light);
+  border: 1px dashed var(--input-border-light); /* Use light mode border */
+  box-shadow: none;
+  color: var(--input-placeholder-light); /* Use light mode placeholder color */
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px; /* Adjust height for forecast placeholder */
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.dark-mode .weather-forecast-panel.initial {
+  background: var(--initial-panel-bg-dark);
+  border: 1px dashed var(--input-border-dark);
+  color: var(--input-placeholder-dark);
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.weather-forecast-panel.initial p {
+  margin-top: 1rem;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Adjust columns for smaller items */
+  gap: 1.5rem; /* Smaller gap for forecast items */
+  margin-top: 1rem;
+}
+
+.forecast-day-item {
+  background: rgba(255, 255, 255, 0.15); /* Very subtle background for each forecast day */
+  border-radius: 15px;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.3s ease, transform 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Very light border */
+}
+.dark-mode .forecast-day-item {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.forecast-day-item:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.3);
+}
+.dark-mode .forecast-day-item:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.forecast-date {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.forecast-icon {
+  width: 60px; /* Smaller icons for forecast */
+  height: 60px;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
+}
+
+.forecast-temps {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  line-height: 1.2;
+}
+.max-temp {
+  color: var(--error-color); /* Red for high temp */
+}
+.dark-mode .max-temp {
+  color: #ff8a80; /* Lighter red for dark mode */
+}
+.min-temp {
+  color: var(--info-color); /* Blue for low temp */
+}
+.dark-mode .min-temp {
+  color: #81d4fa; /* Lighter blue for dark mode */
+}
+
+.forecast-description {
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  opacity: 0.8;
+  margin-top: 0.2rem;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 1.8rem;
+  }
+  .app-header h1 {
+    font-size: 2.5rem;
+  }
+  .theme-toggle {
+    width: 45px;
+    height: 45px;
+    font-size: 1.5rem;
+  }
+  .search-panel {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .search-panel input, .search-panel button {
+    width: 95%;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+  }
+  .current-temp {
+    font-size: 5rem;
+  }
+  .weather-icon-large {
+    width: 180px;
+    height: 180px;
+  }
+  .weather-description {
+    font-size: 1.3rem;
+  }
+  .weather-dashboard {
+    gap: 2rem;
+  }
+  .current-weather-panel, .ai-suggestion-panel, .weather-details-grid, .weather-forecast-panel {
+    padding: 2.5rem;
+    border-radius: 25px;
+  }
+  .ai-suggestion-panel h3, .weather-details-grid h3, .weather-forecast-panel h3 {
+    font-size: 1.5rem;
+  }
+  .ai-suggestion-panel p, .weather-forecast-panel p {
+    font-size: 1.05rem;
+  }
+  .weather-details-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1.5rem;
+  }
+  .detail-label {
+    font-size: 0.95rem;
+  }
+  .detail-value {
+    font-size: 1.6rem;
+  }
+  .forecast-grid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 1rem;
+  }
+  .forecast-icon {
+    width: 50px;
+    height: 50px;
+  }
+  .forecast-temps {
+    font-size: 1rem;
+  }
+  .forecast-description {
+    font-size: 0.75rem;
+  }
+}

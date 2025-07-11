@@ -1,0 +1,19 @@
+// src/components/WeatherCard.jsx
+import React from 'react';
+import "../styles.css";
+
+navigator.geolocation.getCurrentPosition(
+  async (position) => {
+    const { latitude, longitude } = position.coords;
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+    const response = await axios.get(url);
+    setWeather(response.data);
+    setCity(response.data.name);
+  },
+  () => {
+    alert('Permission denied or location unavailable.');
+  }
+);
+
+
+export default WeatherCard;
