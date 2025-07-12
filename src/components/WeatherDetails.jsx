@@ -1,40 +1,49 @@
-// src/components/WeatherDetails.jsx
+// components/WeatherDetails.jsx
 import React from 'react';
 
-// Helper to format time
-const formatTime = (timestamp, timezone) => {
-  const date = new Date((timestamp + timezone) * 1000);
-  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
-};
-
 const WeatherDetails = ({ weather }) => {
-  if (!weather) return null;
+  if (!weather) {
+    return null; // Or a placeholder if preferred
+  }
+
+  // Helper function to format time based on city's timezone offset
+  const formatTime = (timestamp, timezoneOffsetSeconds) => {
+    // Convert timestamp to milliseconds and add timezone offset (in milliseconds)
+    const date = new Date((timestamp + timezoneOffsetSeconds) * 1000);
+    // Use toLocaleTimeString with 'UTC' timezone to ensure the offset is applied correctly
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
+  };
 
   return (
     <div className="weather-details-grid">
-      <div className="detail-item">
-        <span className="detail-label">Feels Like</span>
-        <span className="detail-value">{Math.round(weather.main.feels_like)}°</span>
+      <h3>Weather Details</h3>
+      <div className="weather-detail-item">
+        <strong>Feels Like</strong>
+        <span>{Math.round(weather.main.feels_like)}°C</span>
       </div>
-      <div className="detail-item">
-        <span className="detail-label">Humidity</span>
-        <span className="detail-value">{weather.main.humidity}%</span>
+      <div className="weather-detail-item">
+        <strong>Humidity</strong>
+        <span>{weather.main.humidity}%</span>
       </div>
-      <div className="detail-item">
-        <span className="detail-label">Wind Speed</span>
-        <span className="detail-value">{weather.wind.speed} m/s</span>
+      <div className="weather-detail-item">
+        <strong>Wind Speed</strong>
+        <span>{weather.wind.speed} m/s</span>
       </div>
-      <div className="detail-item">
-        <span className="detail-label">Sunrise</span>
-        <span className="detail-value">{formatTime(weather.sys.sunrise, weather.timezone)}</span>
+      <div className="weather-detail-item">
+        <strong>Pressure</strong>
+        <span>{weather.main.pressure} hPa</span>
       </div>
-      <div className="detail-item">
-        <span className="detail-label">Sunset</span>
-        <span className="detail-value">{formatTime(weather.sys.sunset, weather.timezone)}</span>
+      <div className="weather-detail-item">
+        <strong>Visibility</strong>
+        <span>{weather.visibility / 1000} km</span>
       </div>
-       <div className="detail-item">
-        <span className="detail-label">Pressure</span>
-        <span className="detail-value">{weather.main.pressure} hPa</span>
+      <div className="weather-detail-item">
+        <strong>Sunrise</strong>
+        <span>{formatTime(weather.sys.sunrise, weather.timezone)}</span>
+      </div>
+      <div className="weather-detail-item">
+        <strong>Sunset</strong>
+        <span>{formatTime(weather.sys.sunset, weather.timezone)}</span>
       </div>
     </div>
   );
