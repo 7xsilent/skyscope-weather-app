@@ -1,68 +1,1047 @@
+/* General Styling */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    /* Core Colors - Dark Mode (Now default) */
+    --primary-blue: #60A5FA; /* Lighter blue for dark mode */
+    --secondary-blue: #3B82F6; /* Standard blue */
+    --light-blue: #93C5FD; /* Even lighter blue */
+    --accent-yellow: #FCD34D; /* Brighter yellow */
+    --text-dark: #E5E7EB; /* Very light text for primary */
+    --text-medium: #BFDBFE; /* Lighter grey-blue for secondary text */
+    --text-light: #9CA3AF; /* Still subtle, but more visible light grey */
+    --bg-light: #1F2937; /* Dark background - will be overridden for body */
+    --card-bg: #374151; /* Darker card background */
+    --border-light: #4B5563; /* Darker border */
+    --input-bg: #111827; /* Dark input background */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+    /* Shadows - Dark Mode (Now default) */
+    --shadow-light: rgba(0, 0, 0, 0.2);
+    --shadow-medium: rgba(0, 0, 0, 0.3);
+    --shadow-deep: rgba(0, 0, 0, 0.4);
+    --card-hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    --card-glow-color: rgba(96, 165, 250, 0.3); /* Lighter blue glow for cards (outer) */
+    --card-inner-glow-color: rgba(96, 165, 250, 0.15); /* Softer blue glow for cards (inner) */
+    --card-inner-border-color: #2D3748; /* Darker grey for inner border */
+    --text-glow-color: rgba(96, 165, 250, 0.6); /* Text glow color, derived from primary-blue */
+    --text-glow-intensity: 0 0 8px; /* Base text glow intensity */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    /* New Network Background Colors */
+    --bg-network-dark: #100c2a; /* Very dark blue-purple for base, matching image */
+    --network-dot-color: rgba(150, 150, 250, 0.08); /* Subtle blue dots */
+    --network-line-color: rgba(150, 150, 250, 0.03); /* Even more subtle lines */
+
+
+    /* Button Gradients - Dark Mode (Now default) */
+    --gradient-main-button: linear-gradient(45deg, #059669, #047857);
+    --gradient-active-toggle: linear-gradient(45deg, #0E7490, #0F766E);
+
+    /* Card Specifics - Dark Mode (Now default) */
+    --gradient-card-border: linear-gradient(135deg, rgba(55,65,81,0.8), rgba(75,85,99,0.5));
+
+    /* Graph Specific Gradients - Dark Mode (Now default) */
+    --gradient-temp-low: #93C5FD;
+    --gradient-temp-high: #60A5FA;
+    --gradient-visibility: linear-gradient(to top, #34D399, #10B981);
+    --gradient-pressure: linear-gradient(to right, #9CA3AF, #6B7280);
+    --gradient-humidity: linear-gradient(to top, #60A5FA, #3B82F6);
+    --gradient-precipitation: linear-gradient(to top, #BFDBFE, #93C5FD);
+
+    /* Hourly Forecast Item Background - Dark Mode (Now default) */
+    --hourly-item-bg: linear-gradient(135deg, #2D3748, #1A202C);
+
+    /* Layout Variables */
+    --header-height: 80px;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    /* New network background animation */
+    background-color: var(--bg-network-dark); /* Base dark color */
+    background-image: 
+        /* Three layers of dots for density and subtle randomness */
+        radial-gradient(circle at 15% 85%, var(--network-dot-color) 1px, transparent 0),
+        radial-gradient(circle at 85% 15%, var(--network-dot-color) 1px, transparent 0),
+        radial-gradient(circle at 50% 50%, var(--network-dot-color) 1px, transparent 0),
+        /* Subtle grid lines for the interconnected feel */
+        linear-gradient(to right, var(--network-line-color) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--network-line-color) 1px, transparent 1px);
+    background-size: 
+        50px 50px, /* Size for first dot layer */
+        50px 50px, /* Size for second dot layer */
+        50px 50px, /* Size for third dot layer */
+        50px 50px, /* Size for vertical lines */
+        50px 50px; /* Size for horizontal lines */
+    overflow-x: hidden; /* Prevent horizontal scroll on body */
+    min-height: 100vh;
+    transition: background-color 0.5s ease, color 0.5s ease; /* Smooth transition */
+    animation: networkAnimation 60s linear infinite; /* Combined network animation */
+    position: relative; /* For z-index */
+    z-index: 1; /* Ensure body is above content if needed */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Removed body::before and body::after for cloud animation as requested */
+
+
+/* Background shifting animation for the network */
+@keyframes networkAnimation {
+    0% { 
+        background-position: 
+            0 0, /* Dot layer 1 */
+            0 0, /* Dot layer 2 */
+            0 0, /* Dot layer 3 */
+            0 0, /* Vertical lines */
+            0 0; /* Horizontal lines */
+    }
+    100% { 
+        background-position: 
+            50px 50px, /* Shift dots layer 1 */
+            -50px -50px, /* Shift dots layer 2 in opposite direction */
+            25px 25px, /* Shift dots layer 3 */
+            50px 50px, /* Shift vertical lines */
+            50px 50px; /* Shift horizontal lines */
+    }
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* General Fade In & Scale for initial load */
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Bar fill animation for graphs */
+@keyframes barFill {
+    from { height: 0%; }
+    to { height: var(--bar-height); } /* Uses custom property from JS */
+}
+
+/* Segment fill animation for humidity graph */
+@keyframes segmentFill {
+    from { height: 0%; }
+    to { height: var(--segment-height); } /* Uses custom property from JS */
+}
+
+/* Circular progress bar draw animation */
+@keyframes progressDraw {
+    0% { stroke-dasharray: 0 100; }
+    100% { stroke-dasharray: var(--progress-percentage) 100; } /* Uses custom property from JS */
+}
+
+/* Sun path dash animation */
+@keyframes dash {
+    to { stroke-dashoffset: -160; }
+}
+
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: var(--card-bg); /* Use card-bg for header */
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    box-shadow: 0 6px 20px var(--shadow-light); /* Deeper shadow */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-light); /* Subtle border */
+    height: var(--header-height); /* Set header height */
+    transition: background 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
+}
+
+.app-title {
+    margin: 0;
+    font-size: 1.8em;
+    color: var(--primary-blue);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: var(--text-glow-intensity) var(--text-glow-color); /* Default glow for title */
+    transition: text-shadow 0.3s ease;
+}
+
+.header-icons .icon {
+    font-size: 1.5em;
+    margin-left: 18px; /* More spacing */
+    cursor: pointer;
+    color: var(--text-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), text-shadow 0.3s ease; /* Added text-shadow transition */
+}
+
+.header-icons .icon:hover {
+    color: var(--primary-blue);
+    transform: scale(1.2); /* More pronounced scale */
+    text-shadow: var(--text-glow-intensity) var(--text-glow-color); /* Glow on hover */
+}
+
+/* Main Content Area */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 20px auto;
+    width: 100%;
+    display: flex; /* Make main-content a flex container */
+    flex-direction: column; /* Stack its children vertically */
+    min-height: calc(100vh - var(--header-height) - 40px); /* Ensure it takes available height, 40px for top/bottom padding */
+}
+
+
+/* Top Panel (Location Info, Search Bar, Temp Toggle) */
+.top-panel {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    background: var(--card-bg);
+    padding: 30px; /* More padding */
+    border-radius: 20px; /* More rounded */
+    box-shadow: 0 8px 25px var(--shadow-light); /* Softer, deeper shadow */
+    border: 1px solid var(--border-light); /* Subtle border */
+    animation: fadeInScale 0.8s ease-out forwards; /* Animation for top panel */
+    transition: background 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
+}
+
+.location-info {
+    flex: 1 1 300px;
+    margin-bottom: 20px;
+}
+
+.city-name {
+    font-size: 2.8em; /* Slightly larger */
+    margin: 0;
+    color: var(--text-dark);
+    font-weight: 600;
+    transition: color 0.5s ease, text-shadow 0.3s ease; /* Added text-shadow transition */
+}
+
+.city-name:hover {
+    text-shadow: 0 0 15px var(--text-glow-color); /* Glow on hover */
+}
+
+.current-time, .last-updated {
+    font-size: 1em; /* Slightly larger */
+    color: var(--text-light);
+    margin: 5px 0;
+    transition: color 0.5s ease;
+}
+
+.search-bar-container {
+    display: flex;
+    gap: 12px; /* More spacing */
+    flex: 1 1 400px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.city-input {
+    padding: 12px 18px; /* More padding */
+    border: 1px solid var(--border-light);
+    border-radius: 10px; /* More rounded */
+    font-size: 1.05em; /* Slightly larger font */
+    flex-grow: 1;
+    max-width: 300px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease, color 0.5s ease;
+    background-color: var(--input-bg); /* Use input-bg */
+    color: var(--text-dark);
+}
+
+.city-input:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.2); /* Softer glow from primary blue */
+    outline: none;
+}
+
+.search-button, .location-button {
+    padding: 12px 22px; /* More padding */
+    border: none;
+    border-radius: 10px; /* More rounded */
+    background: var(--gradient-main-button); /* Vibrant gradient */
+    color: white;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), text-shadow 0.3s ease; /* Added text-shadow transition */
+    box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4); /* Shadow matching button color */
+}
+
+.search-button:hover, .location-button:hover {
+    background: linear-gradient(45deg, #38A169, #48BB78); /* Reverse gradient on hover */
+    transform: translateY(-3px) scale(1.02); /* Lift and slightly grow */
+    box-shadow: 0 8px 20px rgba(72, 187, 120, 0.5);
+    text-shadow: 0 0 8px rgba(255,255,255,0.7); /* White glow for button text */
+}
+
+.search-button:active, .location-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(72, 187, 120, 0.2);
+}
+
+.temp-unit-toggle {
+    display: flex;
+    border: 1px solid var(--border-light);
+    border-radius: 10px; /* More rounded */
+    overflow: hidden;
+    margin-left: 25px; /* More spacing */
+    background-color: var(--input-bg); /* Use input-bg */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+    transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.temp-unit-toggle button {
+    padding: 10px 18px; /* More padding */
+    border: none;
+    background-color: transparent;
+    color: var(--text-medium);
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: all 0.2s ease, color 0.5s ease;
+}
+
+.temp-unit-toggle button.active {
+    background: var(--gradient-active-toggle); /* Gradient for active */
+    color: white;
+    font-weight: bold;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.15); /* Softer inner shadow */
+}
+
+/* Loading and Error Messages */
+.loading-overlay, .error-message {
+    padding: 18px; /* More padding */
+    margin: 25px auto; /* More margin */
+    border-radius: 12px; /* More rounded */
+    font-size: 1.2em; /* Larger font */
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Softer, deeper shadow */
+    width: fit-content;
+    max-width: 90%;
+    animation: fadeIn 0.5s ease-out; /* Fade in animation */
+}
+
+.loading-overlay {
+    background-color: #E0F7FA; /* Light cyan */
+    color: #00BCD4; /* Cyan */
+}
+
+.error-message {
+    background-color: #FFEBEE; /* Light red */
+    color: #E53935; /* Stronger red */
+}
+
+/* Weather Dashboard Grid */
+.weather-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column by default */
+    gap: 25px; /* More gap */
+    flex-grow: 1; /* Allow the grid to take up remaining vertical space */
+    min-height: 0; /* Important for flex children with overflow */
+    opacity: 0; /* Hidden by default for animation */
+    transform: translateY(20px); /* Start slightly below */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Smooth transition */
+}
+
+.weather-dashboard-grid.show-cards {
+    opacity: 1; /* Fade in */
+    transform: translateY(0); /* Slide up */
+}
+
+
+@media (min-width: 992px) {
+    .weather-dashboard-grid {
+        grid-template-columns: 2fr 1fr; /* Two columns on larger screens */
+        align-items: start; /* Align grid items to the start of their cells */
+    }
+}
+
+/* Card Base Styling */
+.card {
+    background: var(--card-bg); /* Use gradient for card background */
+    border-radius: 20px; /* More rounded */
+    padding: 30px; /* More padding */
+    box-shadow: 0 10px 30px var(--shadow-light); /* Softer, deeper shadow */
+    border: 1px solid var(--border-light); /* Subtle border */
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease, background 0.5s ease, border-color 0.5s ease; /* Smooth transition */
+    position: relative; /* For potential absolute positioning of elements inside */
+    overflow: hidden; /* Ensure content stays within rounded corners */
+}
+
+.card:hover {
+    transform: translateY(-8px); /* Lift more */
+    /* Combined glow effect: outer shadow + inner shadow */
+    box-shadow: 
+        var(--card-hover-shadow), /* Existing outer hover shadow */
+        0 0 25px 5px var(--card-glow-color), /* Outer blue glow */
+        inset 0 0 15px 3px var(--card-inner-glow-color); /* Inner blue glow */
+    border: 1px solid var(--primary-blue); /* Add primary blue border on hover */
+}
+
+/* Apply text glow to all relevant text elements inside a hovered card */
+.card:hover h4,
+.card:hover p,
+.card:hover span,
+.card:hover .metric-value,
+.card:hover .metric-description,
+.card:hover .suggestion-text,
+.card:hover .total-hours,
+.card:hover .sunrise-time,
+.card:hover .sunset-time,
+.card:hover .wind-speed-info .value,
+.card:hover .wind-speed-info .unit,
+.card:hover .wind-speed-info .label,
+.card:hover .current-time, /* Added for current time */
+.card:hover .last-updated /* Added for last updated */
+{
+    text-shadow: var(--text-glow-intensity) var(--text-glow-color);
+    transition: text-shadow 0.3s ease; /* Smooth transition for text glow */
+}
+
+
+/* Left Column Styling */
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* More gap */
+    height: 100%; /* Take full height of grid cell */
+    overflow-y: auto; /* Enable vertical scroll if content overflows */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--text-medium) var(--bg-light); /* Firefox scrollbar */
+}
+.left-column::-webkit-scrollbar {
+    width: 10px; /* Thicker scrollbar */
+}
+.left-column::-webkit-scrollbar-track {
+    background: var(--bg-light); /* Use var for scrollbar track */
+    border-radius: 10px;
+    border: 1px solid var(--border-light); /* Subtle track border */
+}
+.left-column::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, var(--text-medium), var(--text-light)); /* Gradient thumb */
+    border-radius: 10px;
+    border: 1px solid var(--text-medium); /* Thumb border */
+    transition: background 0.3s ease;
+}
+.left-column::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, var(--text-dark), var(--text-medium)); /* Darker on hover */
+}
+
+
+/* Right Column Styling (Metric Cards & Map) */
+.right-column {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 25px;
+    height: 100%; /* Take full height of grid cell */
+    overflow-y: auto; /* Enable vertical scrollbar for the right column */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--text-medium) var(--bg-light); /* Firefox scrollbar */
+}
+
+/* Custom scrollbar for Webkit browsers for right-column */
+.right-column::-webkit-scrollbar {
+    width: 10px;
+}
+.right-column::-webkit-scrollbar-track {
+    background: var(--bg-light); /* Use var for scrollbar track */
+    border-radius: 10px;
+    border: 1px solid var(--border-light);
+}
+.right-column::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, var(--text-medium), var(--text-light));
+    border-radius: 10px;
+    border: 1px solid var(--text-medium);
+    transition: background 0.3s ease;
+}
+.right-column::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, var(--text-dark), var(--text-medium));
+}
+
+
+.metric-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 25px; /* Consistent padding */
+}
+
+.metric-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px; /* More spacing */
+}
+
+.metric-icon {
+    font-size: 1.8em; /* Larger icons */
+    margin-right: 12px;
+    color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.metric-card h4, .ai-suggestion-card h4 {
+    margin: 0;
+    font-size: 1.3em; /* Larger header */
+    color: var(--text-dark);
+    font-weight: 600;
+    transition: color 0.5s ease;
+}
+
+.metric-value {
+    font-size: 2.8em; /* Larger value */
+    font-weight: bold;
+    color: var(--text-dark);
+    margin: 8px 0; /* More spacing */
+    transition: color 0.5s ease;
+}
+
+/* Removed individual hover for metric-value as it's now handled by .card:hover */
+
+
+.metric-description, .suggestion-text, .loading-text {
+    font-size: 1em; /* Slightly larger */
+    color: var(--text-light);
+    margin: 0;
+    transition: color 0.5s ease;
+}
+
+/* AI Suggestion Cards */
+.ai-suggestion-card {
+    grid-column: span 1; /* Each takes one column */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 25px;
+    background: var(--card-bg); /* Use gradient for AI card background */
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    box-shadow: 0 8px 20px var(--shadow-light);
+    transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.ai-suggestion-card .loading-text {
+    font-style: italic;
+    color: var(--text-medium);
+}
+
+
+/* Specific Metric Visuals */
+.visibility-graph {
+    display: flex;
+    gap: 6px; /* Slightly larger gap */
+    margin-top: 15px; /* More spacing */
+    width: 100%;
+    height: 20px; /* Taller bars */
+    align-items: flex-end;
+    background-color: var(--bg-light); /* Use bg-light for graph background */
+    border-radius: 5px;
+    padding: 2px; /* Inner padding */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.5s ease;
+}
+
+.visibility-graph .bar {
+    background: var(--gradient-visibility); /* Use new gradient */
+    border-radius: 4px; /* More rounded */
+    flex-grow: 1;
+    transition: height 0.5s ease-out; /* Smooth fill animation */
+    animation: barFill 1s ease-out; /* Animation for bar fill */
+}
+
+.wind-details {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 15px; /* More spacing */
+}
+
+.wind-compass-container {
+    position: relative;
+    width: 90px; /* Larger compass */
+    height: 90px;
+    margin-right: 25px; /* More spacing */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wind-compass {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--border-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease; /* Smooth transition */
+    background-color: var(--input-bg); /* Use input-bg */
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+}
+
+.wind-compass .arrow {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent; /* Larger arrow */
+    border-right: 10px solid transparent;
+    border-bottom: 25px solid var(--primary-blue); /* Stronger blue */
+    position: absolute;
+    top: 8px; /* Adjusted position */
+    transform-origin: 50% 40px; /* Adjusted origin */
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)); /* Arrow shadow */
+}
+
+.wind-compass-container .direction {
+    position: absolute;
+    font-size: 0.9em; /* Slightly larger */
+    font-weight: bold;
+    color: var(--text-light);
+    transition: color 0.3s ease;
+}
+.wind-compass-container .direction.north { top: -8px; left: 50%; transform: translateX(-50%); }
+.wind-compass-container .direction.east { right: -8px; top: 50%; transform: translateY(-50%); }
+.wind-compass-container .direction.south { bottom: -8px; left: 50%; transform: translateX(-50%); }
+.wind-compass-container .direction.west { left: -8px; top: 50%; transform: translateY(-50%); }
+
+
+.wind-speed-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.wind-speed-info .value {
+    font-size: 2.2em; /* Larger value */
+    font-weight: bold;
+    margin: 0;
+    line-height: 1;
+    color: var(--text-dark);
+    transition: color 0.5s ease;
+}
+
+/* Removed individual hover for wind-speed-info .value as it's now handled by .card:hover */
+
+.wind-speed-info .unit {
+    font-size: 1em; /* Slightly larger */
+    color: var(--text-light);
+    margin: 0;
+    transition: color 0.5s ease;
+}
+.wind-speed-info .label {
+    font-size: 0.9em; /* Slightly larger */
+    color: var(--text-medium);
+    margin-top: 8px;
+    transition: color 0.5s ease;
+}
+
+
+.pressure-gauge-container {
+    width: 100%;
+    height: 10px; /* Taller bar */
+    background-color: var(--bg-light); /* Use bg-light for graph background */
+    border-radius: 5px;
+    margin-top: 15px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.5s ease;
+}
+
+.pressure-gauge-fill {
+    height: 100%;
+    background: var(--gradient-pressure); /* Use new gradient */
+    border-radius: 5px;
+    transition: width 0.8s ease-out; /* Slower animation */
+    animation: fillBar 1s ease-out;
+}
+
+/* Circular graphs for AQI and UV */
+.aqi-circle-graph, .uv-circle-graph {
+    width: 90px; /* Larger circles */
+    height: 90px;
+    margin: 20px auto 0; /* More spacing */
+}
+
+.circular-chart {
+    display: block;
+    margin: 10px auto;
+    max-width: 90px;
+    max-height: 90px;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: var(--border-light); /* Use border-light */
+    stroke-width: 4.5; /* Thicker background stroke */
+    transition: stroke 0.5s ease;
+}
+
+.circle {
+    fill: none;
+    stroke-width: 4; /* Thicker progress stroke */
+    stroke-linecap: round;
+    animation: progressDraw 1.5s ease-out forwards; /* Slower, smoother draw animation */
+}
+
+.humidity-graph {
+    display: flex;
+    height: 90px; /* Taller graph */
+    width: 100%;
+    gap: 4px; /* More gap */
+    margin-top: 20px; /* More spacing */
+    align-items: flex-end;
+    border-bottom: 2px solid var(--border-light); /* Thicker base line */
+    padding-bottom: 5px; /* More padding */
+    transition: border-color 0.5s ease;
+}
+
+.humidity-bar-segment {
+    width: 10px; /* Wider segments */
+    flex-grow: 1;
+    background-color: var(--bg-light); /* Use bg-light */
+    border-radius: 3px;
+    transition: background-color 0.4s ease, opacity 0.4s ease, height 0.4s ease; /* Smoother transitions */
+    animation: segmentFill 0.8s ease-out; /* Animation for segment fill */
+}
+
+
+.sun-hours-card {
+    grid-column: span 1;
+}
+
+.sun-hours-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.total-hours {
+    font-size: 2.2em; /* Larger total hours */
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-bottom: 15px; /* More spacing */
+    transition: color 0.5s ease;
+}
+
+.sun-time-graph {
+    width: 100%;
+    height: 90px; /* Taller graph */
+    margin-bottom: 15px;
+}
+
+.sun-time-graph svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.sun-time-graph .sun-path {
+    fill: none;
+    stroke: var(--accent-yellow); /* Accent yellow */
+    stroke-width: 3; /* Thicker path */
+    stroke-dasharray: 8 8; /* Larger dashes */
+    animation: dash 8s linear infinite; /* Slower, smoother dash animation */
+    filter: drop-shadow(0 0 5px rgba(246, 224, 94, 0.5)); /* Subtle glow matching new accent-yellow */
+}
+
+.sun-time-graph circle {
+    fill: var(--accent-yellow);
+    stroke: #fff;
+    stroke-width: 2; /* Thicker stroke */
+    filter: drop-shadow(0 0 4px rgba(246, 224, 94, 0.7)); /* Stronger glow matching new accent-yellow */
+}
+
+.sun-times-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.sunrise-time, .sunset-time {
+    text-align: center;
+    font-size: 1.1em; /* Slightly larger */
+    font-weight: bold;
+    color: var(--text-dark);
+    margin: 0;
+    transition: color 0.5s ease;
+}
+
+/* Removed individual hover for sunrise/sunset-time as it's now handled by .card:hover */
+
+.sunrise-time span, .sunset-time span {
+    display: block;
+    font-size: 0.9em; /* Slightly larger */
+    font-weight: normal;
+    color: var(--text-light);
+    margin-top: 3px;
+    transition: color 0.5s ease;
+}
+
+
+/* Map Card */
+.map-card {
+    grid-column: span 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.map-placeholder {
+    width: 100%;
+    height: 250px; /* Taller map */
+    background-color: var(--bg-light); /* Use bg-light */
+    border-radius: 15px;
+    margin-bottom: 20px; /* More spacing */
+    overflow: hidden;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Inner shadow for map container */
+    transition: background-color 0.5s ease;
+}
+
+.map-placeholder iframe, .map-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.larger-map-button {
+    padding: 12px 25px; /* More padding */
+    border: none;
+    border-radius: 10px;
+    background: var(--gradient-main-button); /* Use new gradient */
+    color: white;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), text-shadow 0.3s ease; /* Added text-shadow transition */
+    box-shadow: 0 5px 15px rgba(72, 187, 120, 0.3); /* Shadow matching button color */
+}
+
+.larger-map-button:hover {
+    background: linear-gradient(45deg, #38A169, #48BB78); /* Reverse gradient on hover */
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(72, 187, 120, 0.4);
+    text-shadow: 0 0 8px rgba(255,255,255,0.7); /* White glow for button text */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .main-content {
+        padding: 15px;
+    }
+    .top-panel {
+        padding: 20px;
+    }
+    .city-name {
+        font-size: 2.2em;
+    }
+    .current-temp-main {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .current-weather-icon {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    .weather-summary {
+        margin-left: 0;
+        align-items: center;
+    }
+    .temp-value {
+        font-size: 4.5em;
+    }
+    .weather-summary .description {
+        font-size: 1.5em;
+    }
+    .weather-summary .high-low {
+        font-size: 1.1em;
+    }
+}
+
+@media (min-width: 992px) {
+    /* Ensure left and right columns take full height and scroll independently on larger screens */
+    .left-column, .right-column {
+        height: 100%; /* Make sure they fill the grid cell height */
+        overflow-y: auto; /* Enable vertical scroll if content overflows */
+    }
+}
+
+@media (max-width: 991px) {
+    .weather-dashboard-grid {
+        grid-template-columns: 1fr; /* Stack columns on smaller screens */
+    }
+    /* When stacking, remove height constraints and individual scrolling */
+    .left-column, .right-column {
+        height: auto; /* Allow height to be determined by content */
+        overflow-y: visible; /* Remove individual scrollbars */
+        /* Reset custom scrollbar styles to default for smaller screens */
+        scrollbar-width: auto; 
+        scrollbar-color: auto; 
+    }
+    .left-column::-webkit-scrollbar,
+    .right-column::-webkit-scrollbar {
+        width: auto; 
+    }
+    .left-column::-webkit-scrollbar-track,
+    .right-column::-webkit-scrollbar-track,
+    .left-column::-webkit-scrollbar-thumb,
+    .right-column::-webkit-scrollbar-thumb {
+        background: initial; /* Reset to browser default */
+        border: initial; /* Reset to browser default */
+    }
+
+    .top-panel {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px; /* Adjusted padding for smaller screens */
+    }
+    .location-info {
+        margin-bottom: 15px; /* Adjusted margin */
+    }
+    .city-name {
+        font-size: 2.5em; /* Adjusted font size */
+    }
+    .current-time, .last-updated {
+        font-size: 0.95em; /* Adjusted font size */
+    }
+    .search-bar-container {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 10px; /* Adjusted gap */
+    }
+    .city-input {
+        max-width: none;
+        width: 100%;
+        padding: 10px 15px; /* Adjusted padding */
+        font-size: 1em; /* Adjusted font size */
+    }
+    .search-button, .location-button {
+        flex-grow: 1;
+        padding: 10px 18px; /* Adjusted padding */
+        font-size: 1em; /* Adjusted font size */
+    }
+    .temp-unit-toggle {
+        margin-left: 0;
+        margin-top: 15px;
+        width: 100%;
+        justify-content: center;
+    }
+    .card {
+        padding: 25px; /* Adjusted padding for cards */
+    }
+    .metric-card h4, .ai-suggestion-card h4 {
+        font-size: 1.2em; /* Adjusted font size */
+    }
+    .metric-value {
+        font-size: 2.5em; /* Adjusted font size */
+    }
+    .metric-description, .suggestion-text, .loading-text {
+        font-size: 0.95em; /* Adjusted font size */
+    }
+    .wind-compass-container {
+        width: 80px; /* Slightly smaller compass */
+        height: 80px;
+        margin-right: 20px; /* Adjusted margin */
+    }
+    .wind-compass .arrow {
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-bottom: 22px solid var(--primary-blue);
+        transform-origin: 50% 35px;
+    }
+    .wind-speed-info .value {
+        font-size: 2em; /* Adjusted font size */
+    }
+    .wind-speed-info .unit {
+        font-size: 0.9em; /* Adjusted font size */
+    }
+    .wind-speed-info .label {
+        font-size: 0.85em; /* Adjusted font size */
+    }
+    .sun-time-graph {
+        height: 80px; /* Adjusted height */
+    }
+    .total-hours {
+        font-size: 2em; /* Adjusted font size */
+    }
+    .sunrise-time, .sunset-time {
+        font-size: 1em; /* Adjusted font size */
+    }
+    .sunrise-time span, .sunset-time span {
+        font-size: 0.85em; /* Adjusted font size */
+    }
+    .map-placeholder {
+        height: 200px; /* Adjusted height */
+    }
+    .larger-map-button {
+        padding: 10px 20px; /* Adjusted padding */
+        font-size: 1em; /* Adjusted font size */
+    }
+}
+
+@media (max-width: 600px) {
+    .app-header {
+        padding: 10px 15px;
+    }
+    .app-title {
+        font-size: 1.5em;
+    }
+    .header-icons .icon {
+        margin-left: 10px;
+    }
+    .city-name {
+        font-size: 2em;
+    }
+    .current-weather-icon {
+        width: 100px;
+        height: 100px;
+    }
+    .temp-value {
+        font-size: 3.5em;
+    }
+    .weather-summary .description {
+        font-size: 1.2em;
+    }
+    .forecast-day-item, .hourly-item {
+        width: 80px;
+        margin-right: 10px;
+        padding: 10px;
+    }
+    .metric-card {
+        padding: 20px;
+    }
+    .metric-value {
+        font-size: 2em;
+    }
+    .wind-compass-container {
+        width: 70px;
+        height: 70px;
+        margin-right: 15px;
+    }
+    .wind-compass .arrow {
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 20px solid var(--primary-blue);
+        transform-origin: 50% 30px;
+    }
+    .map-placeholder {
+        height: 180px;
+    }
+    .hourly-temp-graph {
+        min-width: 100%;
+    }
 }
