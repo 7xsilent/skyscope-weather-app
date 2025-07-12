@@ -1,25 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
- <head>
+  <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SkyScope</title>
-
-    <!-- IMPORTANT: This style block prevents the white flash on load -->
-    <style>
-        body {
-            background-color: #87ceeb; /* Matches the initial light-mode sky color */
-            margin: 0; /* Ensure no default body margin */
-        }
-    </style>
-
-    <!-- Your existing link to styles.css should be here or imported in App.jsx -->
-    <!-- <link rel="stylesheet" href="/src/styles.css" /> -->
-
-</head>
+    <title>SkyScope Weather App</title>
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Three.js and OrbitControls loaded globally -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
   </body>
 </html>
